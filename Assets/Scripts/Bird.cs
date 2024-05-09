@@ -5,23 +5,27 @@ using UnityEngine.InputSystem;
 
 public class Bird : MonoBehaviour
 {
+    [SerializeField] GameObject bird1Prefab;
+    [SerializeField] GameObject bird2Prefab;
+    [SerializeField] Rigidbody2D pivot;
+    [SerializeField] float detachDelay;
+    [SerializeField] float respawnDelay;
 
     Camera mainCamera;
     Rigidbody2D currentRigidBody;
     Animator birdAnimator;
+    SpringJoint2D currentSpring;
+    bool isDragging;
+    GameObject[] Birds = new GameObject[2];
+    
 
-    [SerializeField] GameObject birdPrefab;
-    public bool isDragging;
 
-    private void Awake() 
-    {
-        
-    }
-    void Start()
+    void Awake()
     {
         mainCamera = Camera.main;
-        currentRigidBody = birdPrefab.GetComponent<Rigidbody2D>();
-        birdAnimator = birdPrefab.GetComponent<Animator>();
+        Birds[0] =bird1Prefab;
+        Birds[1] =bird2Prefab;
+        SpawnBird();
     }
 
     // Update is called once per frame
@@ -49,6 +53,29 @@ public class Bird : MonoBehaviour
     void LaunchBird()
     {
         currentRigidBody = null;
+        Invoke(nameof(DetachSpring), detachDelay);
+    }
+
+    void DetachSpring ()
+    {
+        birdAnimator.SetBool("isLaunched", true);
+        currentSpring.enabled = false;
+        currentSpring = null;
+
+        Invoke(nameof(SpawnBird), respawnDelay);
+    }
+    
+    void SpawnBird()
+    {
+        GameObject birdInstance = Instantiate(Birds[Random.Range(0,2)], pivot.transform.position-new Vector3(2,2,0), Quaternion.identity, GameObject.Find("Birds").transform);
+        currentRigidBody = birdInstance.GetComponent<Rigidbody2D>();
+        birdAnimator = birdInstance.GetComponent<Animator>();
+
+        currentSpring = birdInstance.GetComponent<SpringJoint2D>();
+        currentSpring.enabled = true;
+        currentSpring.connectedBody=pivot;
+
+        birdAnimator = birdInstance.GetComponent<Animator>();
     }
 
 }
