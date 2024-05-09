@@ -13,7 +13,7 @@ TagManager:
   - UI
   - Platforms
   - Bird
-  - 
+  - Planks
   - 
   - 
   - 
@@ -46,4 +46,7 @@ TagManager:
     locked: 0
   - name: Trees
     uniqueID: 866821825
+    locked: 0
+  - name: Planks
+    uniqueID: 1298472873
     locked: 0
