@@ -17,6 +17,7 @@ public class Bird : MonoBehaviour
     SpringJoint2D currentSpring;
     bool isDragging;
     GameObject[] Birds = new GameObject[2];
+    GameObject birdInstance;
     
 
 
@@ -61,13 +62,13 @@ public class Bird : MonoBehaviour
         birdAnimator.SetBool("isLaunched", true);
         currentSpring.enabled = false;
         currentSpring = null;
-
+        Destroy(birdInstance,3f);
         Invoke(nameof(SpawnBird), respawnDelay);
     }
     
     void SpawnBird()
     {
-        GameObject birdInstance = Instantiate(Birds[Random.Range(0,2)], pivot.transform.position-new Vector3(2,2,0), Quaternion.identity, GameObject.Find("Birds").transform);
+        birdInstance = Instantiate(Birds[Random.Range(0,2)], pivot.transform.position-new Vector3(2,2,0), Quaternion.identity, GameObject.Find("Birds").transform);
         currentRigidBody = birdInstance.GetComponent<Rigidbody2D>();
         birdAnimator = birdInstance.GetComponent<Animator>();
 
